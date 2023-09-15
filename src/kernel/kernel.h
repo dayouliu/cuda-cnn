@@ -13,7 +13,4 @@ extern "C" __global__ void cuda_flatten(double *conv_output, double *linear_laye
 extern "C" __global__ void cuda_sum(double *flatten_output, double *sum_output,
                                     int flatten_dim, int sum_dim, int sum_batch);
 
-extern "C" __global__ void cuda_sum2(double *sum_input, double *sum_output,
-                                     int sum_in_dim, int sum_out_dim, int sum_batch);
-
 extern "C" __global__ void cuda_out(double *sum_output, double *output, int sum_dim);

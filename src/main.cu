@@ -17,6 +17,7 @@ uint LINEAR_LAYER_SIZE = OUTPUT_DIM;
 uint LINEAR_DIM = CONV_OUT_DIM * CONV_OUT_DIM * CONV_LAYER_SIZE;
 
 string IN_FILE_PATH = "../input/simple.csv";
+string CNN_FILE_PATH = "../input/cnn.csv";
 
 void read_input(tensor2 &input) {
     ifstream inputFile(IN_FILE_PATH);
@@ -41,9 +42,7 @@ void read_input(tensor2 &input) {
 }
 
 void read_cnn(tensor3 &conv_layer, tensor2 &linear_layer) {
-    string cnnFilePath = "../input/cnn.csv";
-
-    ifstream cnnFile(cnnFilePath);
+    ifstream cnnFile(CNN_FILE_PATH);
     assert(cnnFile.is_open());
 
     // Read filter weights
@@ -85,7 +84,6 @@ int main() {
     tensor2 input{INPUT_DIM, INPUT_DIM};
     read_input(input);
 
-
     // Read CNN file
     tensor3 conv_layer(CONV_LAYER_SIZE, CONV_FILTER_DIM, CONV_FILTER_DIM);
     tensor2 linear_layer(LINEAR_LAYER_SIZE, LINEAR_DIM);
@@ -93,8 +91,8 @@ int main() {
 
     tensor3 conv_output(CONV_LAYER_SIZE, CONV_OUT_DIM, CONV_OUT_DIM);
     tensor2 flatten(LINEAR_LAYER_SIZE, LINEAR_DIM);
-    tensor2 sum_layer1(LINEAR_LAYER_SIZE, 200);
-    tensor2 sum_layer2(LINEAR_LAYER_SIZE, 10);
+    tensor2 sum_output1(LINEAR_LAYER_SIZE, 200);
+    tensor2 sum_output2(LINEAR_LAYER_SIZE, 10);
     tensor2 output(1, OUTPUT_DIM);
 
     input.to_device();
@@ -102,8 +100,8 @@ int main() {
     conv_output.to_device();
     linear_layer.to_device();
     flatten.to_device();
-    sum_layer1.to_device();
-    sum_layer2.to_device();
+    sum_output1.to_device();
+    sum_output2.to_device();
     output.to_device();
 
     cuda_conv_relu<<<10, dim3{20, 20, 1}>>>(
@@ -120,14 +118,14 @@ int main() {
 //    flatten.to_host();
 //    cout << flatten << endl;
 
-    cuda_sum<<<10, 200>>>(flatten.device_ptr(), sum_layer1.device_ptr(), LINEAR_DIM, 200, 20);
+    cuda_sum<<<10, 200>>>(flatten.device_ptr(), sum_output1.device_ptr(), LINEAR_DIM, 200, 20);
 
-    cuda_sum2<<<10, 10>>>(sum_layer1.device_ptr(), sum_layer2.device_ptr(), 200, 10, 20);
+    cuda_sum<<<10, 10>>>(sum_output1.device_ptr(), sum_output2.device_ptr(), 200, 10, 20);
 
-//    sum_layer2.to_host();
-//    cout << sum_layer2 << endl;
+//    sum_output2.to_host();
+//    cout << sum_output2 << endl;
 
-    cuda_out<<<1, 10, 0>>>(sum_layer2.device_ptr(), output.device_ptr(), 10);
+    cuda_out<<<1, 10, 0>>>(sum_output2.device_ptr(), output.device_ptr(), 10);
 
     output.to_host();
 

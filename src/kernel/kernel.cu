@@ -47,21 +47,7 @@ extern "C" __global__ void cuda_flatten(double *conv_output, double *linear_laye
             linear_layer[index2(label_i, linear_i, linear_dim)];
 }
 
-extern "C" __global__ void cuda_sum(double *flatten_output, double *sum_output, int flatten_dim, int sum_dim, int sum_batch) {
-    int label_i = blockIdx.x;
-    int sum_i = threadIdx.x;
-    int start = sum_i * sum_batch;
-    int end = start + sum_batch;
-
-    double result = 0;
-    for (int i = start; i < end; ++i) {
-        result += flatten_output[index2(label_i, i, flatten_dim)];
-    }
-
-    sum_output[index2(label_i, sum_i, sum_dim)] = result;
-}
-
-extern "C" __global__ void cuda_sum2(double *sum_input, double *sum_output, int sum_in_dim, int sum_out_dim, int sum_batch) {
+extern "C" __global__ void cuda_sum(double *sum_input, double *sum_output, int sum_in_dim, int sum_out_dim, int sum_batch) {
     int label_i = blockIdx.x;
     int sum_i = threadIdx.x;
     int start = sum_i * sum_batch;
