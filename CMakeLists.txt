@@ -5,8 +5,8 @@ set(CMAKE_CUDA_STANDARD 17)
 
 add_executable(cuda_cnn src/main.cu
         tests/test_cuda.cu
-        kernel/kernel.h
-        kernel/kernel.cu
+        src/kernel/kernel.h
+        src/kernel/kernel.cu
         src/data/tensor.cu
         src/data/tensor.cuh
 )
