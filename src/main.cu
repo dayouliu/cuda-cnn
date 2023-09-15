@@ -3,8 +3,8 @@
 #include <cassert>
 #include <vector>
 #include <sstream>
-#include "kernel/kernel.h"
-#include "data/tensor.cuh"
+#include "../kernel/kernel.h"
+#include "../src/data/tensor.cuh"
 
 using namespace std;
 

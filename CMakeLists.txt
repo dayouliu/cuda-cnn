@@ -3,12 +3,12 @@ project(cuda_cnn CUDA)
 
 set(CMAKE_CUDA_STANDARD 17)
 
-add_executable(cuda_cnn main.cu
+add_executable(cuda_cnn src/main.cu
         tests/test_cuda.cu
         kernel/kernel.h
         kernel/kernel.cu
-        data/tensor.cu
-        data/tensor.cuh
+        src/data/tensor.cu
+        src/data/tensor.cuh
 )
 
 set_target_properties(cuda_cnn PROPERTIES
