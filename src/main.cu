@@ -3,7 +3,7 @@
 #include <cassert>
 #include <vector>
 #include <sstream>
-#include "../kernel/kernel.h"
+#include "../src/kernel/kernel.h"
 #include "../src/data/tensor.cuh"
 
 using namespace std;
