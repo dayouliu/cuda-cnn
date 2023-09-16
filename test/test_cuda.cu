@@ -1,4 +1,5 @@
 #include <iostream>
+#include <gtest/gtest.h>
 
 // CUDA kernel
 __global__ void vectorAdd(int *a, int *b, int *c, int size) {
@@ -13,7 +14,7 @@ __global__ void vectorAdd(int *a, int *b, int *c, int size) {
     }
 }
 
-int testSimpleCuda() {
+TEST(SimpleCudaTest, VectorAdd) {
     std::cout << "Hello, World!" << std::endl;
 
     int size = 1024;
@@ -44,11 +45,7 @@ int testSimpleCuda() {
     cudaMemcpy(vecC, vecCCuda, size * sizeof(int), cudaMemcpyDeviceToHost);
 
     for(int i = 0; i < size; ++i) {
-        if(vecC[i] != vecA[i] + vecB[i]) {
-            std::cerr << "incorrect value at index " << i << std::endl;
-            break;
-        }
-        std::cout << vecA[i] << " " << vecB[i] << " " << vecC[i] << std::endl;
+        EXPECT_EQ(vecC[i], vecA[i] + vecB[i]);
     }
 
     delete[] vecA;
@@ -57,6 +54,4 @@ int testSimpleCuda() {
     cudaFree(vecACuda);
     cudaFree(vecBCuda);
     cudaFree(vecCCuda);
-
-    return 0;
 }
